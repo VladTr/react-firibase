@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Table from './components/Table/Table';
 
 import './App.css';
 
@@ -11,6 +12,7 @@ class App extends Component {
     return (
       <div className="App">
         Hi there
+        <Table />
       </div>
     );
   }
