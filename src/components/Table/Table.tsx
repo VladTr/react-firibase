@@ -2,6 +2,8 @@ import React from 'react';
 import classes from './Table.module.css';
 import upArrow from '../../assets/img/up.png';
 import downArrow from '../../assets/img/down.png';
+import Input from '../Input/Input';
+import Picker from '../Picker/Picker';
 
 const getFormattedDate = (date: Date) => {
     const year = date.getFullYear();
@@ -18,14 +20,15 @@ const table = (props:any) => (
         <thead>
             <tr>
                 {props.headers.map((header: any) => (
-                    <td onClick={(ev)=>props.orderChanged(header.name)} key={header.name}>
+                    <td key={header.name}>
                         {header.name}
-                        <div>
+                        <div onClick={(ev)=>props.orderChanged(header.name)}>
                             <img
                                 className={classes.Image}
                                 src={!header.order ? '' : (header.order ==='desc' ? upArrow: downArrow)}
                             />
                         </div>
+                        {header.name !=='lastActive' ? <Input name={header.name}/> : <Picker/>}
                     </td>
                 ))}
             </tr>

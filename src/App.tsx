@@ -7,7 +7,7 @@ import './App.css';
 
 const recordsPerPage: number = 5;
 
-class App extends Component<{ onInit: (users: any[]) => {}, users: any }> {
+class App extends Component<{ onInit: (users: any[]) => {}, users: any, search: any}> {
     state = {
         table: {
             headers: [
@@ -82,6 +82,17 @@ class App extends Component<{ onInit: (users: any[]) => {}, users: any }> {
                 }
             });
 
+            if (this.props.search && this.props.search.value) {
+                allUsers = allUsers.filter((user: any) => {
+                    if (this.props.search.field !== 'lastActive') {
+                        return user[this.props.search.field] === this.props.search.value
+                    } else {
+                        return user[this.props.search.field] > this.props.search.value.start
+                            && user[this.props.search.field] < this.props.search.value.end
+                    }
+                });
+            }
+
             len = Math.ceil(allUsers.length / recordsPerPage);
             const from = recordsPerPage * this.state.page - recordsPerPage;
             const to = from + recordsPerPage;
@@ -90,7 +101,6 @@ class App extends Component<{ onInit: (users: any[]) => {}, users: any }> {
 
         return this.props.users.length ? (
             <div className="App">
-                Hi there
                 <Table
                     headers={this.state.table.headers}
                     users={users}
@@ -109,7 +119,8 @@ class App extends Component<{ onInit: (users: any[]) => {}, users: any }> {
 }
 
 const mapStateToProps = (state: any) => ({
-    users: state.users
+    users: state.users,
+    search: state.search
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
