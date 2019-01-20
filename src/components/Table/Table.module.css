@@ -20,3 +20,12 @@
     background-color: #4CAF50;
     color: white;
 }
+
+.Image {
+    width: 15px;
+    height: 15px;
+}
+
+.Image:hover{
+    cursor: pointer;
+}

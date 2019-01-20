@@ -2,17 +2,23 @@ import React, {Component} from 'react';
 import Table from './components/Table/Table';
 import Loader from './components/Loader/Loader';
 import Pagination from './components/Pagination/Pagination';
+import {connect} from 'react-redux';
 import './App.css';
 
 const recordsPerPage: number = 5;
 
-class App extends Component {
+class App extends Component<{ onInit: (users: any[]) => {}, users: any }> {
     state = {
         table: {
-            headers: ['id', 'email', 'name', 'last Active']
+            headers: [
+                {name: 'id', order: 'asc'},
+                {name: 'email', order: null},
+                {name: 'name', order: null},
+                {name: 'lastActive', order: null}
+            ]
         },
-        users: [],
-        page: 1
+        page: 1,
+        sortBy: 'id'
     };
 
     componentDidMount() {
@@ -29,33 +35,72 @@ class App extends Component {
                         lastActive: data[id].lastActive,
                     });
                 }
-                this.setState({users});
+                this.props.onInit(users);
             });
     }
 
-    clicked = (page: number) => {
+    clickedHandler = (page: number) => {
         this.setState({page})
+    };
+
+    orderChangedHandler = (name: string) => {
+        const headers = this.state.table.headers;
+        headers.forEach((header: any) => {
+            if (header.name === name) {
+                header.order = header.order === 'asc' ? 'desc' : 'asc';
+            } else {
+                header.order = null;
+            }
+        });
+        this.setState({
+            table: {
+                headers
+            },
+            page: 1,
+            sortBy: name
+        });
     };
 
     render() {
         let len: number = 0;
+        let allUsers = [];
         let users: any[] = [];
-        if (this.state.users && this.state.users.length) {
-            len = Math.ceil(this.state.users.length/recordsPerPage);
-            const from = recordsPerPage*this.state.page - recordsPerPage;
+        if (this.props.users && this.props.users.length) {
+            allUsers = this.props.users;
+            const order = this.state.table.headers
+                .find((header: any) => header.name === this.state.sortBy).order;
+
+            allUsers = allUsers.sort((a: any, b: any) => {
+                if (order === 'desc') {
+                    if (a[this.state.sortBy] > b[this.state.sortBy]) {
+                        return 1
+                    } else return -1
+                } else {
+                    if (a[this.state.sortBy] < b[this.state.sortBy]) {
+                        return 1
+                    } else return -1
+                }
+            });
+
+            len = Math.ceil(allUsers.length / recordsPerPage);
+            const from = recordsPerPage * this.state.page - recordsPerPage;
             const to = from + recordsPerPage;
-            users = this.state.users.slice(from, to);
+            users = allUsers.slice(from, to);
         }
 
-        return this.state.users.length ? (
+        return this.props.users.length ? (
             <div className="App">
                 Hi there
-                <Table headers={this.state.table.headers} users={users}/*users={this.state.users}*//>
+                <Table
+                    headers={this.state.table.headers}
+                    users={users}
+                    orderChanged={this.orderChangedHandler}
+                />
                 <Pagination
                     active={this.state.page}
-                    clicked={this.clicked}
+                    clicked={this.clickedHandler}
                     items={
-                        Array.from({length: len}, (v, k) => k+1)
+                        Array.from({length: len}, (v, k) => k + 1)
                     }
                 />
             </div>
@@ -63,4 +108,12 @@ class App extends Component {
     }
 }
 
-export default App;
+const mapStateToProps = (state: any) => ({
+    users: state.users
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+    onInit: (users: any[]) => dispatch({type: "INIT", payload: users})
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

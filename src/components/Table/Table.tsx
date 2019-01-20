@@ -1,5 +1,7 @@
 import React from 'react';
 import classes from './Table.module.css';
+import upArrow from '../../assets/img/up.png';
+import downArrow from '../../assets/img/down.png';
 
 const getFormattedDate = (date: Date) => {
     const year = date.getFullYear();
@@ -15,8 +17,16 @@ const table = (props:any) => (
     <table className={classes.Users}>
         <thead>
             <tr>
-                {props.headers.map((header: string) => (
-                    <td key={header}>{header}</td>
+                {props.headers.map((header: any) => (
+                    <td onClick={(ev)=>props.orderChanged(header.name)} key={header.name}>
+                        {header.name}
+                        <div>
+                            <img
+                                className={classes.Image}
+                                src={!header.order ? '' : (header.order ==='desc' ? upArrow: downArrow)}
+                            />
+                        </div>
+                    </td>
                 ))}
             </tr>
         </thead>
