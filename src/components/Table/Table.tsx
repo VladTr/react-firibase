@@ -47,4 +47,5 @@ const table = (props:any) => (
     </table>
 );
 
+
 export default table;
