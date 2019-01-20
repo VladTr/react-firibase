@@ -1,0 +1,50 @@
+.PaginationNumber{
+    display: inline-block;
+    background: #ffff;
+    border: 0;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 40px;
+    color: #ffff;
+    text-transform: uppercase;
+    padding: 0 20px;
+}
+.Pagination {
+    margin-top: 80px;
+    text-align: center;
+}
+.PaginationNumber li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.PaginationNumber li:hover {
+    color: #4CAF50;
+    cursor: pointer;
+}
+
+.Pagination ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.PaginationNumber .inactive{
+    background-color: #3576ce;
+    color:white;
+}
+
+.PaginationNumber .active{
+    color: #e43821;
+}
+
+.PaginationNumber{
+    display: inline-block;
+    background-color: #3576ce;
+    border: 0;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 40px;
+    color: white;
+    text-transform: uppercase;
+    padding: 0 20px;
+}
